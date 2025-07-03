@@ -12,10 +12,12 @@ error_reporting(E_ALL);
 define('ROOT', dirname(__FILE__));
 require_once(ROOT . '/components/Autoload.php');
 
-// 3. Встановлення підключення до БД
+// 3. Початок сесії
 
-// 4. Виклик Router
+session_start();
+
+// 4. Встановлення підключення до БД
+
+// 5. Виклик Router
 $router = new Router();
 $router->run();
-
-

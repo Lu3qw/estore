@@ -63,8 +63,8 @@
                     <div class="col-sm-8">
                         <div class="shop-menu pull-right">
                             <ul class="nav navbar-nav">
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i> Корзина</a></li>
-                                <li><a href="#"><i class="fa fa-user"></i> Аккаунт</a></li>
+                                <li><a href="#"><i class="fa fa-shopping-cart"></i> Кошик</a></li>
+                                <li><a href="#"><i class="fa fa-user"></i> Обліковий запис</a></li>
                                 <li><a href="#"><i class="fa fa-lock"></i> Вхід</a></li>
                             </ul>
                         </div>
@@ -91,7 +91,7 @@
                                 <li class="dropdown"><a href="#">Магазин<i class="fa fa-angle-down"></i></a>
                                     <ul role="menu" class="sub-menu">
                                         <li><a href="/catalog">Каталог товарів</a></li>
-                                        <li><a href="/cart">Корзина</a></li>
+                                        <li><a href="/cart">Кошик</a></li>
                                     </ul>
                                 </li>
                                 <li><a href="/about">О магазині</a></li>
