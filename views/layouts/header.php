@@ -55,7 +55,7 @@
                 <div class="row">
                     <div class="col-sm-4">
                         <div class="logo pull-left">
-                            <a href="index.html">
+                            <a href="/">
                                 <img src="/template/images/home/logo.png" alt="" style="max-width:180px; height:auto;" />
                             </a>
                         </div>
@@ -63,9 +63,15 @@
                     <div class="col-sm-8">
                         <div class="shop-menu pull-right">
                             <ul class="nav navbar-nav">
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i> Кошик</a></li>
-                                <li><a href="#"><i class="fa fa-user"></i> Обліковий запис</a></li>
-                                <li><a href="#"><i class="fa fa-lock"></i> Вхід</a></li>
+                                <li><a href="/cart"><i class="fa fa-shopping-cart"></i> Кошик 
+                                    <?php 
+                                    $cartQuantity = Cart::getTotalQuantity();
+                                    if ($cartQuantity > 0): ?>
+                                        <span class="badge"><?= $cartQuantity ?></span>
+                                    <?php endif; ?>
+                                </a></li>
+                                <li><a href="/user/profile"><i class="fa fa-user"></i> Обліковий запис</a></li>
+                                <li><a href="/user/login"><i class="fa fa-lock"></i> Вхід</a></li>
                             </ul>
                         </div>
                     </div>

@@ -53,14 +53,9 @@
                                         </td>
                                         <td class="cart_total">
                                             <p class="cart_total_price">$<?= $product['total_price'] ?></p>
-                                                                                    <td class="cart_total">
-                                            <p class="cart_total_price">$<?= $product['total_price'] ?></p>
                                         </td>
                                         <td class="cart_delete">
-                                            <form method="post" action="/cart/delete" style="display: inline;">
-                                                <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
-                                                <button type="submit" class="btn btn-sm btn-danger">Видалити</button>
-                                            </form>
+                                            <a href="/cart/remove?id=<?= $product['id'] ?>" class="btn btn-sm btn-danger">Видалити</a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -68,9 +63,10 @@
                         </table>
                     </div>
 
-                    <div class="cart-summary">
+                    <div class="cart-summary" style="text-align: right; margin-top: 20px;">
                         <h3>Всього: $<?= $totalPrice ?></h3>
-                        <a href="/checkout" class="btn btn-success btn-lg">Оформити замовлення</a>
+                        <a href="/cart/clear" class="btn btn-warning">Очистити кошик</a>
+                        <a href="/cart/checkout" class="btn btn-success btn-lg">Оформити замовлення</a>
                     </div>
 
                 <?php endif; ?>
@@ -80,4 +76,3 @@
 </section>
 
 <?php include(ROOT . "/views/layouts/footer.php") ?>
-                                            

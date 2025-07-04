@@ -2,22 +2,26 @@
 
 class Order {
 
-    public static function create($userName, $userPhone, $userComment, $userId, $products) {
+    public static function create($name, $email, $phone, $address, $products, $totalPrice) {
         $db = Db::getConnection();
 
         $productsJson = json_encode($products);
 
-        $query = "INSERT INTO `order` (user_name, user_phone, user_comment, user_id, products, status, date)
-                  VALUES (:user_name, :user_phone, :user_comment, :user_id, :products, 1, NOW())";
+        $query = "INSERT INTO `order` (user_name, user_email, user_phone, user_address, products, total_price, status, date)
+                  VALUES (:user_name, :user_email, :user_phone, :user_address, :products, :total_price, 1, NOW())";
 
         $result = $db->prepare($query);
-        $result->bindParam(':user_name', $userName, PDO::PARAM_STR);
-        $result->bindParam(':user_phone', $userPhone, PDO::PARAM_STR);
-        $result->bindParam(':user_comment', $userComment, PDO::PARAM_STR);
-        $result->bindParam(':user_id', $userId, PDO::PARAM_INT);
+        $result->bindParam(':user_name', $name, PDO::PARAM_STR);
+        $result->bindParam(':user_email', $email, PDO::PARAM_STR);
+        $result->bindParam(':user_phone', $phone, PDO::PARAM_STR);
+        $result->bindParam(':user_address', $address, PDO::PARAM_STR);
         $result->bindParam(':products', $productsJson, PDO::PARAM_STR);
+        $result->bindParam(':total_price', $totalPrice, PDO::PARAM_STR);
 
-        return $result->execute();
+        if ($result->execute()) {
+            return $db->lastInsertId();
+        }
+        return false;
     }
 
     public static function getOrderById($orderId) {

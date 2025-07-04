@@ -38,7 +38,10 @@
                                                     <?= $product['name'] ?>
                                                 </a>
                                             </p>
-                                            <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>В корзину</a>
+                                            <button type="button" class="btn btn-default add-to-cart" onclick="addToCart(<?= $product['id'] ?>)">
+                                                <i class="fa fa-shopping-cart"></i>
+                                                В кошик
+                                            </button>
                                         </div>
                                         <?php if($product['is_new']): ?>
                                             <img src="/template/images/home/new.png" alt="new" class='new'>
@@ -67,9 +70,11 @@
                                                         <img src="/template/images/home/recommend1.jpg" alt="" />
                                                         <h2>$56</h2>
                                                         <p>Easy Polo Black Edition</p>
-                                                        <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>В корзину</a>
+                                                        <button type="button" class="btn btn-default add-to-cart" onclick="addToCart(<?= $product['id'] ?>)">
+                                                            <i class="fa fa-shopping-cart"></i>
+                                                            В кошик
+                                                        </button>
                                                     </div>
-
                                                 </div>
                                             </div>
                                         </div>
@@ -151,5 +156,20 @@
                 </div>
             </div>
         </section>
+
+        <script>
+            function addToCart(productId) {
+                
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/cart/add', true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        alert('Товар додано в кошик!');
+                    }
+                };
+                xhr.send('product_id=' + productId + '&quantity=' + 1);
+            }
+        </script>
 
 <?php include(ROOT . "/views/layouts/footer.php") ?>
