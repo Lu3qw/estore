@@ -64,16 +64,20 @@ class UserController {
     }
 
     public function actionProfile() {
-    $userId = $_SESSION['user'] ?? null;
-    if (!$userId) {
-        header("Location: /user/login");
-        exit;
+        $userId = $_SESSION['user'] ?? null;
+        if (!$userId) {
+            header("Location: /user/login");
+            exit;
+        }
+        
+        $user = User::getById($userId);
+        
+        // Отримуємо замовлення користувача
+        $orders = Order::getOrdersByUserId($userId);
+        
+        require_once(ROOT . '/views/user/profile.php');
+        return true;
     }
-    $user = User::getById($userId);
-    require_once(ROOT . '/views/user/profile.php');
-    return true;
-}
-
 
    public function actionIndex() {
         if (isset($_SESSION['user'])) {
@@ -86,25 +90,24 @@ class UserController {
     }
 
     public function actionEdit() {
-    $userId = $_SESSION['user'] ?? null;
-    if (!$userId) {
-        header("Location: /user/login");
-        exit;
+        $userId = $_SESSION['user'] ?? null;
+        if (!$userId) {
+            header("Location: /user/login");
+            exit;
+        }
+        if ($_POST) {
+            User::update($userId, $_POST['name'], $_POST['email']);
+            header("Location: /user/profile");
+            exit;
+        }
+        $user = User::getById($userId);
+        require_once(ROOT . '/views/user/edit.php');
+        return true;
     }
-    if ($_POST) {
-        User::update($userId, $_POST['name'], $_POST['email']);
-        header("Location: /user/profile");
-        exit;
-    }
-    $user = User::getById($userId);
-    require_once(ROOT . '/views/user/edit.php');
-    return true;
-}
 
     public function actionLogout() {
-    unset($_SESSION['user']);
-    header("Location: /");
-    exit;
+        unset($_SESSION['user']);
+        header("Location: /");
+        exit;
     }
-
 }

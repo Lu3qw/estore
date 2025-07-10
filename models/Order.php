@@ -2,25 +2,19 @@
 
 class Order {
 
-    public static function create($name, $phone, $address, $products, $totalPrice, $userId = null) {
+    public static function create($userName, $userPhone, $userComment, $products, $userId = null) {
         $db = Db::getConnection();
-
-        if (is_array($address)) {
-            $address = implode(", ", $address);
-        }
-
-        $productsJson = json_encode($products);
-
-        $query = "INSERT INTO `order` (user_name, user_phone, user_comment, products, user_id, date, status)
-                  VALUES (:user_name, :user_phone, :user_comment, :products, :user_id, NOW(), 1)";
-
-        $result = $db->prepare($query);
-        $result->bindParam(':user_name', $name, PDO::PARAM_STR);
-        $result->bindParam(':user_phone', $phone, PDO::PARAM_STR);
-        $result->bindParam(':user_comment', $address, PDO::PARAM_STR);
-        $result->bindParam(':products', $productsJson, PDO::PARAM_STR);
+        
+        $sql = 'INSERT INTO `order` (user_name, user_phone, user_comment, products, user_id) 
+                VALUES (:user_name, :user_phone, :user_comment, :products, :user_id)';
+        
+        $result = $db->prepare($sql);
+        $result->bindParam(':user_name', $userName, PDO::PARAM_STR);
+        $result->bindParam(':user_phone', $userPhone, PDO::PARAM_STR);
+        $result->bindParam(':user_comment', $userComment, PDO::PARAM_STR);
+        $result->bindParam(':products', json_encode($products), PDO::PARAM_STR);
         $result->bindParam(':user_id', $userId, PDO::PARAM_INT);
-
+        
         if ($result->execute()) {
             return $db->lastInsertId();
         }
@@ -30,18 +24,12 @@ class Order {
     public static function getOrderById($orderId) {
         $db = Db::getConnection();
 
-        $query = "SELECT * FROM `order` WHERE id = :id";
-        $result = $db->prepare($query);
+        $sql = 'SELECT * FROM `order` WHERE id = :id';
+        $result = $db->prepare($sql);
         $result->bindParam(':id', $orderId, PDO::PARAM_INT);
         $result->execute();
-
-        $order = $result->fetch(PDO::FETCH_ASSOC);
-
-        if ($order && isset($order['products'])) {
-            $order['products'] = json_decode($order['products'], true);
-        }
-
-        return $order;
+        
+        return $result->fetch(PDO::FETCH_ASSOC);
     }
 
     public static function getAllOrders() {
@@ -63,16 +51,17 @@ class Order {
 
     public static function getOrdersByUserId($userId) {
         $db = Db::getConnection();
-        $query = "SELECT * FROM `order` WHERE user_id = :user_id ORDER BY date DESC";
-        $result = $db->prepare($query);
+
+        $sql = 'SELECT * FROM `order` WHERE user_id = :user_id ORDER BY date DESC';
+        $result = $db->prepare($sql);
         $result->bindParam(':user_id', $userId, PDO::PARAM_INT);
         $result->execute();
-        $orders = $result->fetchAll(PDO::FETCH_ASSOC);
-        foreach ($orders as &$order) {
-            if (isset($order['products'])) {
-                $order['products'] = json_decode($order['products'], true);
-            }
+        
+        $orders = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $orders[] = $row;
         }
+        
         return $orders;
     }
 
