@@ -32,5 +32,8 @@ return [
     'admin' => 'admin/index',
     
     // Головна сторінка
-    '' => 'site/index'
+    'about' => 'site/about',
+    'contact' => 'site/contact',
+    '' => 'site/index',
+    
 ];

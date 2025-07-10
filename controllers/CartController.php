@@ -47,9 +47,12 @@ class CartController {
     }
 
     public function actionRemove() {
-        
-        $productId = isset($_GET['id']) ? intval($_GET['id']) : 0;
-        
+        if (isset($_POST['product_id'])) {
+            $productId = intval($_POST['product_id']);
+        } else {
+            $productId = isset($_GET['id']) ? intval($_GET['id']) : 0;
+        }
+
         if ($productId > 0) {
             Cart::removeProduct($productId);
         }
@@ -81,6 +84,9 @@ class CartController {
         $address = '';
         $errors = [];
 
+        // Додаємо визначення userId для авторизованого користувача
+        $userId = isset($_SESSION['user']) ? intval($_SESSION['user']) : null;
+
         if (isset($_POST['submit'])) {
             $name = trim($_POST['name']);
             $email = trim($_POST['email']);
@@ -102,8 +108,7 @@ class CartController {
             }
 
             if (empty($errors)) {
-               
-                $orderId = Order::create($name, $email, $phone, $address, $cartProducts, $totalPrice);
+                $orderId = Order::create($name, $phone, $address, $cartProducts, $totalPrice, $userId);
                 
                 if ($orderId) {
                     Cart::clear();

@@ -63,16 +63,22 @@
                     <div class="col-sm-8">
                         <div class="shop-menu pull-right">
                             <ul class="nav navbar-nav">
-                                <li><a href="/cart"><i class="fa fa-shopping-cart"></i> Кошик 
-                                    <?php 
-                                    $cartQuantity = Cart::getTotalQuantity();
-                                    if ($cartQuantity > 0): ?>
-                                        <span class="badge"><?= $cartQuantity ?></span>
-                                    <?php endif; ?>
-                                </a></li>
-                                <li><a href="/user/profile"><i class="fa fa-user"></i> Обліковий запис</a></li>
-                                <li><a href="/user/login"><i class="fa fa-lock"></i> Вхід</a></li>
-                            </ul>
+    <li>
+        <a href="/cart"><i class="fa fa-shopping-cart"></i> Кошик 
+            <?php 
+            $cartQuantity = Cart::getTotalQuantity();
+            if ($cartQuantity > 0): ?>
+                <span class="badge"><?= $cartQuantity ?></span>
+            <?php endif; ?>
+        </a>
+    </li>
+    <?php if (isset($_SESSION['user'])): ?>
+        <li><a href="/user/profile"><i class="fa fa-user"></i> Обліковий запис</a></li>
+        <li><a href="/user/logout"><i class="fa fa-sign-out"></i> Вийти</a></li>
+    <?php else: ?>
+        <li><a href="/user/login"><i class="fa fa-lock"></i> Вхід</a></li>
+    <?php endif; ?>
+</ul>
                         </div>
                     </div>
                 </div>

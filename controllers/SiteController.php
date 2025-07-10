@@ -16,4 +16,14 @@ class SiteController {
         return true;
     }
 
+    public function actionAbout() {
+        require_once ROOT . '/views/site/about.php';
+        return true;
+    }
+
+    public function actionContact() {
+        require_once ROOT . '/views/site/contact.php';
+        return true;
+    }
+
 }

@@ -2,21 +2,24 @@
 
 class Order {
 
-    public static function create($name, $email, $phone, $address, $products, $totalPrice) {
+    public static function create($name, $phone, $address, $products, $totalPrice, $userId = null) {
         $db = Db::getConnection();
+
+        if (is_array($address)) {
+            $address = implode(", ", $address);
+        }
 
         $productsJson = json_encode($products);
 
-        $query = "INSERT INTO `order` (user_name, user_email, user_phone, user_address, products, total_price, status, date)
-                  VALUES (:user_name, :user_email, :user_phone, :user_address, :products, :total_price, 1, NOW())";
+        $query = "INSERT INTO `order` (user_name, user_phone, user_comment, products, user_id, date, status)
+                  VALUES (:user_name, :user_phone, :user_comment, :products, :user_id, NOW(), 1)";
 
         $result = $db->prepare($query);
         $result->bindParam(':user_name', $name, PDO::PARAM_STR);
-        $result->bindParam(':user_email', $email, PDO::PARAM_STR);
         $result->bindParam(':user_phone', $phone, PDO::PARAM_STR);
-        $result->bindParam(':user_address', $address, PDO::PARAM_STR);
+        $result->bindParam(':user_comment', $address, PDO::PARAM_STR);
         $result->bindParam(':products', $productsJson, PDO::PARAM_STR);
-        $result->bindParam(':total_price', $totalPrice, PDO::PARAM_STR);
+        $result->bindParam(':user_id', $userId, PDO::PARAM_INT);
 
         if ($result->execute()) {
             return $db->lastInsertId();
@@ -55,6 +58,21 @@ class Order {
             }
         }
 
+        return $orders;
+    }
+
+    public static function getOrdersByUserId($userId) {
+        $db = Db::getConnection();
+        $query = "SELECT * FROM `order` WHERE user_id = :user_id ORDER BY date DESC";
+        $result = $db->prepare($query);
+        $result->bindParam(':user_id', $userId, PDO::PARAM_INT);
+        $result->execute();
+        $orders = $result->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($orders as &$order) {
+            if (isset($order['products'])) {
+                $order['products'] = json_decode($order['products'], true);
+            }
+        }
         return $orders;
     }
 

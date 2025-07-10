@@ -20,4 +20,10 @@ class ProductController {
         return true;
     }
 
+    public function actionSearch() {
+        $query = $_GET['query'] ?? '';
+        $products = Product::searchProducts($query);
+        require_once(ROOT . '/views/catalog/search.php');
+    }
+
 }
