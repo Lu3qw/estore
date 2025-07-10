@@ -7,6 +7,9 @@ return [
     // Каталог
     'catalog' => 'catalog/index',
     'category/([0-9]+)' => 'catalog/category/$1',
+
+    // Відгуки
+    'review/add/([0-9]+)' => 'review/add/$1',
     
     // Кошик
     'cart/add' => 'cart/add',

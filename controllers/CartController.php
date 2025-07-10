@@ -86,6 +86,9 @@ class CartController {
 
         // Додаємо визначення userId для авторизованого користувача
         $userId = isset($_SESSION['user']) ? intval($_SESSION['user']) : null;
+        
+        // Налагодження - можна видалити після тестування
+        error_log("User ID in checkout: " . ($userId ? $userId : 'NULL'));
 
         if (isset($_POST['submit'])) {
             $name = trim($_POST['name']);
@@ -108,9 +111,15 @@ class CartController {
             }
 
             if (empty($errors)) {
+                // Налагодження - можна видалити після тестування
+                error_log("Creating order with user_id: " . ($userId ? $userId : 'NULL'));
+                
                 $orderId = Order::create($name, $phone, $address, $cartProducts, $totalPrice, $userId);
                 
                 if ($orderId) {
+                    // Налагодження - можна видалити після тестування
+                    error_log("Order created with ID: " . $orderId);
+                    
                     Cart::clear();
                     header('Location: /cart/success/' . $orderId);
                     return true;
@@ -125,14 +134,11 @@ class CartController {
     }
 
     public function actionSuccess($orderId) {
-        
         $order = Order::getOrderById($orderId);
-        
         if (!$order) {
             header('Location: /');
             return false;
         }
-
         require_once ROOT . '/views/cart/success.php';
         return true;
     }

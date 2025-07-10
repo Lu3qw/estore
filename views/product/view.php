@@ -32,6 +32,16 @@
                                 </div>
                                 <div class="col-sm-7">
                                     <div class="product-information"><!--/product-information-->
+
+                                    <!-- favourite button -->
+                                    <div class="favourite">
+                                        <form method="post" action="/user/favorite/add" style="display:inline;">
+                                            <input type="hidden" name="product_id" value="<?= $product['id'] ?>" />
+                                            <button type="submit" class="btn btn-default add-to-cart">
+                                                <i class="fa fa-heart"></i>
+                                                В обране
+                                            </button>
+                                        </form>
                                         <?php if($product['is_new']): ?>
                                             <img src="/template/images/product-details/new.jpg" class="newarrival" alt="new" />
                                         <?php endif ?>
@@ -41,7 +51,7 @@
                                             <span>$<?= $product['price'] ?></span>
                                             <label>Кількість:</label>
                                             <input type="number" value="1" min="1" id="quantity" />
-                                            <button type="button" class="btn btn-fefault cart" onclick="addToCart(<?= $product['id'] ?>)">
+                                            <button type="button" class="btn btn-fefault cart" style="background-color:rgb(126, 25, 221);" onclick="addToCart(<?= $product['id'] ?>)">
                                                 <i class="fa fa-shopping-cart"></i>
                                                 В кошик
                                             </button>
@@ -55,17 +65,86 @@
                                                 <?php endif ?>
                                             <?php endforeach ?>
                                         </p>
+                                        <h5>Опис товару</h5>
+                                        <div style="white-space: pre-line;">
+                                            <?= htmlspecialchars($product['description']) ?>
+                                        </div>
+                                    </div><!--/favourite-->
+
+                                    <!-- Відгуки -->
+                                    <div class="reviews" style="margin-top:40px;">
+    <h4>Відгуки</h4>
+    <?php if (!empty($reviews) && is_array($reviews)): ?>
+        <?php foreach ($reviews as $review): ?>
+            <div class="panel panel-default" style="margin-bottom:10px;">
+                <div class="panel-heading">
+                    <strong><?= htmlspecialchars($review['user_name']) ?></strong>
+                    <span class="text-muted" style="font-size:0.9em;float:right;">
+                        <?= $review['created_at'] ? date('d.m.Y H:i', strtotime($review['created_at'])) : '' ?>
+                    </span>
+                    <?php if (!empty($review['rating'])): ?>
+                        <div style="margin-top:5px;">
+                            <?php for ($i = 1; $i <= 5; $i++): ?>
+                                <span style="color:<?= $i <= $review['rating'] ? '#FFD700' : '#ccc' ?>;">&#9733;</span>
+                            <?php endfor; ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+                <div class="panel-body">
+                    <?= nl2br(htmlspecialchars($review['text'])) ?>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <p>Ще немає відгуків. Будьте першим!</p>
+    <?php endif; ?>
+</div>
+
+
+                                        <hr>
+                                        <h5>Залишити відгук</h5>
+                                        <form method="post" action="/review/add/<?= $product['id'] ?>">
+                                            <div class="form-group">
+                                                <label>Оцінка:</label>
+                                                <div class="rating" style="font-size:2em; color:#FFD700;">
+                                                    <?php for ($i = 1; $i <= 5; $i++): ?>
+                                                        <input type="radio" id="star<?= $i ?>" name="rating" value="<?= $i ?>" style="display:none;" required>
+                                                        <label for="star<?= $i ?>" style="cursor:pointer;">&#9733;</label>
+                                                    <?php endfor; ?>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <textarea name="text" class="form-control" rows="3" required placeholder="Ваш відгук..."></textarea>
+                                            </div>
+                                            <button type="submit" name="submit_review" class="btn btn-primary" style="background-color:#a259e6;">Надіслати</button>
+                                        </form>
+                                        <script>
+                                        // Зірковий рейтинг: підсвічування при наведенні та виборі
+                                        const ratingLabels = document.querySelectorAll('.rating label');
+                                        const ratingInputs = document.querySelectorAll('.rating input');
+                                        ratingLabels.forEach((label, idx) => {
+                                            label.addEventListener('mouseenter', function() {
+                                                for (let i = 0; i <= idx; i++) ratingLabels[i].style.color = '#FFD700';
+                                                for (let i = idx + 1; i < ratingLabels.length; i++) ratingLabels[i].style.color = '#ccc';
+                                            });
+                                            label.addEventListener('mouseleave', function() {
+                                                let checkedIdx = -1;
+                                                ratingInputs.forEach((input, i) => { if (input.checked) checkedIdx = i; });
+                                                for (let i = 0; i <= (checkedIdx >= 0 ? checkedIdx : -1); i++) ratingLabels[i].style.color = '#FFD700';
+                                                for (let i = (checkedIdx >= 0 ? checkedIdx + 1 : 0); i < ratingLabels.length; i++) ratingLabels[i].style.color = '#ccc';
+                                            });
+                                            label.addEventListener('click', function() {
+                                                for (let i = 0; i <= idx; i++) ratingLabels[i].style.color = '#FFD700';
+                                                for (let i = idx + 1; i < ratingLabels.length; i++) ratingLabels[i].style.color = '#ccc';
+                                            });
+                                        });
+                                        </script>
+                                    </div>
+
                                     </div><!--/product-information-->
                                 </div>
                             </div>
-                            <div class="row">                                
-                                <div class="col-sm-12">
-                                    <h5>Опис товару</h5>
-                                    <p><?= nl2br(htmlspecialchars($product['description'])) ?></p>
-                                </div>
-                            </div>
                         </div><!--/product-details-->
-ч
                     </div>
                 </div>
             </div>

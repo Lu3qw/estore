@@ -2,7 +2,7 @@
 
 class Order {
 
-    public static function create($userName, $userPhone, $userComment, $products, $userId = null) {
+    public static function create($userName, $userPhone, $userComment, $products, $totalPrice, $userId = null) {
         $db = Db::getConnection();
         
         $sql = 'INSERT INTO `order` (user_name, user_phone, user_comment, products, user_id) 
