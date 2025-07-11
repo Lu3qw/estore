@@ -10,6 +10,12 @@ return [
 
     // Відгуки
     'review/add/([0-9]+)' => 'review/add/$1',
+
+    // Улюблені товари
+    'favorite/add/([0-9]+)' => 'favorite/add/$1',
+    'favorite/remove/([0-9]+)' => 'favorite/remove/$1',
+    'user/favorites' => 'favorite/index',
+    
     
     // Кошик
     'cart/add' => 'cart/add',
@@ -19,6 +25,9 @@ return [
     'cart/checkout' => 'cart/checkout',
     'cart/success/([0-9]+)' => 'cart/success/$1',
     'cart' => 'cart/index',
+
+    'search' => 'search/index',
+    'search/ajax' => 'search/ajax',
     
     // Користувачі
     'user/register' => 'user/register',

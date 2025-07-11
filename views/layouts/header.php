@@ -108,6 +108,20 @@
                                 </li>
                                 <li><a href="/about">О магазині</a></li>
                                 <li><a href="/contact">Контакти</a></li>
+                                <div class="search_box pull-right">
+                        <form method="GET" action="/search" class="search-form">
+                            <div class="input-group">
+                                <input type="text" name="q" class="form-control" placeholder="Пошук товарів..." 
+                                       value="<?= htmlspecialchars($_GET['q'] ?? '') ?>" id="searchInput">
+                                <div class="input-group-btn">
+                                    <button type="submit" class="btn btn-default">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        <!-- Search suggestions dropdown -->
+                        <div id="searchSuggestions" class="search-suggestions" style="display: none;"></div>
                             </ul>
                         </div>
                     </div>
@@ -116,3 +130,113 @@
         </div><!--/header-bottom-->
 
     </header><!--/header-->
+
+
+    <style>
+.search-form {
+    position: relative;
+    width: 300px;
+    top: -6px;
+}
+
+.search-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-top: none;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.search-suggestion {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.search-suggestion:hover {
+    background-color: #f5f5f5;
+}
+
+.search-suggestion img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+.search-suggestion-info {
+    flex: 1;
+}
+
+.search-suggestion-name {
+    font-weight: bold;
+    color: #333;
+}
+
+.search-suggestion-price {
+    color: #666;
+    font-size: 0.9em;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const searchSuggestions = document.getElementById('searchSuggestions');
+    let searchTimeout;
+
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        const query = this.value.trim();
+        
+        if (query.length < 2) {
+            searchSuggestions.style.display = 'none';
+            return;
+        }
+        
+        searchTimeout = setTimeout(function() {
+            fetch('/search/ajax?q=' + encodeURIComponent(query))
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        let html = '';
+                        data.forEach(product => {
+                            html += `
+                                <div class="search-suggestion" onclick="window.location.href='${product.url}'">
+                                    <img src="${product.image ? '/template/images/products/' + product.image : '/template/images/product-details/1.jpg'}" alt="${product.name}">
+                                    <div class="search-suggestion-info">
+                                        <div class="search-suggestion-name">${product.name}</div>
+                                        <div class="search-suggestion-price">$${product.price}</div>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        searchSuggestions.innerHTML = html;
+                        searchSuggestions.style.display = 'block';
+                    } else {
+                        searchSuggestions.style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Search error:', error);
+                    searchSuggestions.style.display = 'none';
+                });
+        }, 300);
+    });
+    
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!searchInput.contains(e.target) && !searchSuggestions.contains(e.target)) {
+            searchSuggestions.style.display = 'none';
+        }
+    });
+});
+</script>

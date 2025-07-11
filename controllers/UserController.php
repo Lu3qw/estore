@@ -67,13 +67,16 @@ class UserController {
         $userId = $_SESSION['user'] ?? null;
         if (!$userId) {
             header("Location: /user/login");
-            exit;
+            exit();
         }
         
         $user = User::getById($userId);
         
-        // Отримуємо замовлення користувача
         $orders = Order::getOrdersByUserId($userId);
+        
+        $favorites = Favorite::getFavorites($userId);
+        
+        $reviews = Review::getByUserId($userId);
         
         require_once(ROOT . '/views/user/profile.php');
         return true;

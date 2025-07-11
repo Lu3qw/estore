@@ -8,11 +8,11 @@ class Review {
     }
     public static function getByProduct($productId) {
         $db = Db::getConnection();
-       $stmt = $db->prepare("SELECT r.id, r.product_id, r.user_id, r.text, r.rating, r.created_at, IFNULL(u.name, 'Гість') AS user_name 
+       $stmt = $db->prepare("SELECT r.id, r.product_id, r.user_id, r.text, r.rating, r.date, IFNULL(u.name, 'Гість') AS user_name 
                       FROM reviews r 
-                      LEFT JOIN users u ON r.user_id = u.id 
+                      LEFT JOIN user u ON r.user_id = u.id 
                       WHERE r.product_id = ? 
-                      ORDER BY r.created_at DESC");
+                      ORDER BY r.date DESC");
 
         $stmt->execute([$productId]);
         return $stmt->fetchAll();
