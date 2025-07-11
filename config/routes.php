@@ -16,7 +16,6 @@ return [
     'favorite/remove/([0-9]+)' => 'favorite/remove/$1',
     'user/favorites' => 'favorite/index',
     
-    
     // Кошик
     'cart/add' => 'cart/add',
     'cart/update' => 'cart/update',
@@ -34,13 +33,35 @@ return [
     'user/login' => 'user/login',
     'user/logout' => 'user/logout',
     'user/profile' => 'user/profile',
+    'user/edit' => 'user/edit',
     'user' => 'user/index',
     
     // Адмін панель
-    'admin/login' => 'admin/login',
-    'admin/products' => 'admin/products',
-    'admin/categories' => 'admin/categories',
-    'admin/orders' => 'admin/orders',
+    'admin/products/index' => 'admin/products/index',
+    'admin/products/create' => 'admin/products/create',
+    'admin/products/update/([0-9]+)' => 'admin/products/update/$1',
+    'admin/products/delete/([0-9]+)' => 'admin/products/delete/$1',
+
+    'admin/categories/index' => 'admin/categories/index',
+    'admin/categories/create' => 'admin/categories/create',
+    'admin/categories/update/([0-9]+)' => 'admin/categories/update/$1',
+    'admin/categories/delete/([0-9]+)' => 'admin/categories/delete/$1',
+
+    'admin/orders/index' => 'admin/orders/index',
+    'admin/orders/view/([0-9]+)' => 'admin/orders/view/$1',
+    'admin/orders/update/([0-9]+)' => 'admin/orders/update/$1',
+    'admin/orders/delete/([0-9]+)' => 'admin/orders/delete/$1',
+
+    'admin/users/index' => 'admin/users/index',
+    'admin/users/create' => 'admin/users/create',
+    'admin/users/update/([0-9]+)' => 'admin/users/update/$1',
+    'admin/users/delete/([0-9]+)' => 'admin/users/delete/$1',
+
+    'admin/reviews/index' => 'admin/reviews/index',
+    'admin/reviews/view/([0-9]+)' => 'admin/reviews/view/$1',
+    'admin/reviews/update/([0-9]+)' => 'admin/reviews/update/$1',
+    'admin/reviews/delete/([0-9]+)' => 'admin/reviews/delete/$1',
+
     'admin' => 'admin/index',
     
     // Головна сторінка

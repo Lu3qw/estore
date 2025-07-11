@@ -1,4 +1,3 @@
-
 class SearchWidget {
     constructor() {
         this.searchInput = document.getElementById('searchInput');
@@ -82,8 +81,15 @@ class SearchWidget {
     
     async fetchSuggestions(query) {
         try {
+            console.log('Fetching suggestions for:', query); // Debug
             const response = await fetch(`/search/ajax?q=${encodeURIComponent(query)}`);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
             const data = await response.json();
+            console.log('Received data:', data); // Debug
             
             this.suggestions = data;
             this.selectedIndex = -1;
@@ -103,11 +109,12 @@ class SearchWidget {
         let html = '';
         this.suggestions.forEach((product, index) => {
             const isSelected = index === this.selectedIndex;
+            const imageUrl = product.image ? `/template/images/products/${product.image}` : '/template/images/product-details/1.jpg';
+            
             html += `
                 <div class="search-suggestion ${isSelected ? 'selected' : ''}" 
-                     data-index="${index}" 
-                     onclick="window.location.href='${product.url}'">
-                    <img src="${product.image ? '/template/images/products/' + product.image : '/template/images/product-details/1.jpg'}" 
+                     data-index="${index}">
+                    <img src="${imageUrl}" 
                          alt="${this.escapeHtml(product.name)}" 
                          onerror="this.src='/template/images/product-details/1.jpg'">
                     <div class="search-suggestion-info">
@@ -119,6 +126,15 @@ class SearchWidget {
         });
         
         this.searchSuggestions.innerHTML = html;
+        
+        // Додаємо обробники подій для кліків
+        this.searchSuggestions.querySelectorAll('.search-suggestion').forEach((suggestion, index) => {
+            suggestion.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.location.href = this.suggestions[index].url;
+            });
+        });
+        
         this.showSuggestions();
     }
     

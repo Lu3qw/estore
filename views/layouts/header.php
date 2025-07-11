@@ -72,6 +72,18 @@
             <?php endif; ?>
         </a>
     </li>
+    <?php 
+    $showAdminPanel = false;
+    if (isset($_SESSION['user'])) {
+        $user = User::getById($_SESSION['user']);
+        if ($user && isset($user['role']) && $user['role'] === 'admin') {
+            $showAdminPanel = true;
+        }
+    }
+    ?>
+    <?php if ($showAdminPanel): ?>
+        <li><a href="/admin"><i class="fa fa-cogs"></i> Адмін-панель</a></li>
+    <?php endif; ?>
     <?php if (isset($_SESSION['user'])): ?>
         <li><a href="/user/profile"><i class="fa fa-user"></i> Обліковий запис</a></li>
         <li><a href="/user/logout"><i class="fa fa-sign-out"></i> Вийти</a></li>
@@ -108,21 +120,22 @@
                                 </li>
                                 <li><a href="/about">О магазині</a></li>
                                 <li><a href="/contact">Контакти</a></li>
-                                <div class="search_box pull-right">
-                        <form method="GET" action="/search" class="search-form">
-                            <div class="input-group">
-                                <input type="text" name="q" class="form-control" placeholder="Пошук товарів..." 
-                                       value="<?= htmlspecialchars($_GET['q'] ?? '') ?>" id="searchInput">
-                                <div class="input-group-btn">
-                                    <button type="submit" class="btn btn-default">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                        <!-- Search suggestions dropdown -->
-                        <div id="searchSuggestions" class="search-suggestions" style="display: none;"></div>
                             </ul>
+                        </div>
+                        <div class="search_box pull-right">
+                            <form method="GET" action="/search" class="search-form">
+                                <div class="input-group">
+                                    <input type="text" name="q" class="form-control" placeholder="Пошук товарів..." 
+                                           value="<?= htmlspecialchars($_GET['q'] ?? '') ?>" id="searchInput">
+                                    <div class="input-group-btn">
+                                        <button type="submit" class="btn btn-default">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                            <!-- Search suggestions dropdown -->
+                            <div id="searchSuggestions" class="search-suggestions" style="display: none;"></div>
                         </div>
                     </div>
                 </div>
@@ -130,7 +143,6 @@
         </div><!--/header-bottom-->
 
     </header><!--/header-->
-
 
     <style>
 .search-form {
@@ -165,6 +177,10 @@
     background-color: #f5f5f5;
 }
 
+.search-suggestion.selected {
+    background-color: #e8f4f8;
+}
+
 .search-suggestion img {
     width: 40px;
     height: 40px;
@@ -185,58 +201,13 @@
     color: #666;
     font-size: 0.9em;
 }
+
+.search-suggestion mark {
+    background-color: #ffeb3b;
+    padding: 0 2px;
+    border-radius: 2px;
+}
 </style>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('searchInput');
-    const searchSuggestions = document.getElementById('searchSuggestions');
-    let searchTimeout;
-
-    searchInput.addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        const query = this.value.trim();
-        
-        if (query.length < 2) {
-            searchSuggestions.style.display = 'none';
-            return;
-        }
-        
-        searchTimeout = setTimeout(function() {
-            fetch('/search/ajax?q=' + encodeURIComponent(query))
-                .then(response => response.json())
-                .then(data => {
-                    if (data.length > 0) {
-                        let html = '';
-                        data.forEach(product => {
-                            html += `
-                                <div class="search-suggestion" onclick="window.location.href='${product.url}'">
-                                    <img src="${product.image ? '/template/images/products/' + product.image : '/template/images/product-details/1.jpg'}" alt="${product.name}">
-                                    <div class="search-suggestion-info">
-                                        <div class="search-suggestion-name">${product.name}</div>
-                                        <div class="search-suggestion-price">$${product.price}</div>
-                                    </div>
-                                </div>
-                            `;
-                        });
-                        searchSuggestions.innerHTML = html;
-                        searchSuggestions.style.display = 'block';
-                    } else {
-                        searchSuggestions.style.display = 'none';
-                    }
-                })
-                .catch(error => {
-                    console.error('Search error:', error);
-                    searchSuggestions.style.display = 'none';
-                });
-        }, 300);
-    });
-    
-    // Hide suggestions when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!searchInput.contains(e.target) && !searchSuggestions.contains(e.target)) {
-            searchSuggestions.style.display = 'none';
-        }
-    });
-});
-</script>
+<!-- Include search widget script -->
+<script src="/template/js/search.js"></script>

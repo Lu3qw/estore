@@ -67,4 +67,19 @@ Class User {
         $result->bindParam(':id', $id, PDO::PARAM_INT);
         return $result->execute();
     }
+
+    public static function delete($id) {
+        $db = Db::getConnection();
+        $sql = "DELETE FROM user WHERE id = :id";
+        $result = $db->prepare($sql);
+        $result->bindParam(':id', $id, PDO::PARAM_INT);
+        return $result->execute();
+    }
+
+    public static function getAllUsers() {
+        $db = Db::getConnection();
+        $sql = "SELECT * FROM user";
+        $result = $db->query($sql);
+        return $result->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

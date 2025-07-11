@@ -5,7 +5,10 @@
         <div class="row">
             <div class="col-sm-3">
                 <div class="left-sidebar">
-                    <h2>Фільтри пошуку</h2>
+                    <div class="sidebar-title-with-lines">
+                        <h2>Фільтри пошуку</h2>
+                    </div>
+
                     
                     <form method="GET" action="/search" id="searchForm">
                         <!-- Search Query -->
@@ -74,8 +77,8 @@
                                 </select>
                             </div>
                         </div>
-                        
-                        <button type="submit" class="btn btn-primary btn-block">Пошук</button>
+
+                        <button type="submit" class="btn btn-primary btn-block" style="background-color: #a259e6;">Пошук</button>
                         <a href="/search" class="btn btn-default btn-block">Скинути</a>
                     </form>
                 </div>
